@@ -1,7 +1,7 @@
-package com.testsuite;
+package com.vankillua.testsuite;
 
-import com.testcase.BuyTest;
-import com.testcase.LoginTest;
+import com.vankillua.testcase.BuyTest;
+import com.vankillua.testcase.LoginTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

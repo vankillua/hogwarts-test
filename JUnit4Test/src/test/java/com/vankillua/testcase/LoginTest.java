@@ -1,4 +1,4 @@
-package com.testcase;
+package com.vankillua.testcase;
 
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
-package com.testsuite;
+package com.vankillua.testsuite;
 
-import com.testcase.LoginTest;
+import com.vankillua.testcase.LoginTest;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.runner.RunWith;
