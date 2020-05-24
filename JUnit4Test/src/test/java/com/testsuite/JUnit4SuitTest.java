@@ -1,4 +1,4 @@
-package com.testsuit;
+package com.testsuite;
 
 import com.testcase.BuyTest;
 import com.testcase.LoginTest;
