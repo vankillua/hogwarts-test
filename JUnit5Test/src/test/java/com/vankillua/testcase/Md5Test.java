@@ -36,6 +36,6 @@ public class Md5Test {
             total1 += one;
 //            System.out.println("bStr: " + bStr + ", zero: " + zero + ", one: " + one);
         }
-        System.out.printf("zero: %03d, one: %03d", total0, total1);
+        System.out.printf("zero: %03d, one: %03d\n", total0, total1);
     }
 }
