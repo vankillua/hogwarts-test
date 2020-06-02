@@ -4,4 +4,4 @@
 *.class
 *.iml
 */allure-results
-*/src/test/resources/cookies.json
+**/cookies.json

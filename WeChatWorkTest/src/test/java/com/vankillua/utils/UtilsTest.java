@@ -1,4 +1,4 @@
-package com.vankillua.selenium;
+package com.vankillua.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
@@ -23,15 +23,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @Author KILLUA
- * @Date 2020/5/27 20:49
+ * @Date 2020/6/2 9:17
  * @Description
  */
-public class OptionsTest {
-    private static WebDriver driver;
-    private static final String TITLE = "企业微信";
-
+public class UtilsTest {
     @BeforeAll
     static void before() {
+    }
+
+    private WebDriver initDriver() {
         ChromeOptions options = new ChromeOptions();
         /*
         1. 关闭全部Chrome浏览器
@@ -42,15 +42,26 @@ public class OptionsTest {
          */
         options.setExperimentalOption("debuggerAddress", "127.0.0.1:9001");
         // new ChromeDriver时设置ChromeOptions
-        driver = new ChromeDriver(options);
+        WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        return driver;
+    }
+
+    private void quitDriver(WebDriver driver) {
+        if (null != driver) {
+            driver.quit();
+        }
     }
 
     @Test
     void saveCookies() throws IOException {
+        WebDriver driver = null;
+        final String TITLE = "企业微信";
         BufferedWriter bufferedWriter = null;
         try {
+            driver = initDriver();
+
             assertThat("当前页面的标题不是<" + TITLE + ">", driver.getTitle(), is(TITLE));
             ObjectMapper objectMapper = new ObjectMapper();
             List<Cookie> list = new ArrayList<>(driver.manage().getCookies());
@@ -65,25 +76,11 @@ public class OptionsTest {
             if (null != bufferedWriter) {
                 bufferedWriter.close();
             }
-        }
-    }
-
-    @Test
-    void searchBaidu() {
-        // 无需访问待测试网页，也不会打开一个新的浏览器，而是在当前浏览器直接执行
-        driver.findElement(By.id("kw")).sendKeys("bilibili");
-        driver.findElement(By.id("su")).click();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            quitDriver(driver);
         }
     }
 
     @AfterAll
     static void after() {
-        if (null != driver) {
-            driver.quit();
-        }
     }
 }
