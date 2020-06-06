@@ -1,0 +1,19 @@
+url: http://127.0.0.1:4723/wd/hub
+
+capabilities:
+  deviceName: 127.0.0.1:7555
+  platformName: Android
+  automationName: UiAutomator2
+  noReset: true
+  noSign: true
+  appPackage: com.xueqiu.android
+  appActivity: .view.WelcomeActivityAlias
+  unicodeKeyboard: true
+  resetKeyboard: true
+  skipDeviceInitialization: true
+  skipServerInstallation: true
+
+wait:
+  timeout: 10
+  sleepTime: 1000
+  implicitlyWait: 6

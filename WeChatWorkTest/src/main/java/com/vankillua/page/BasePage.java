@@ -36,8 +36,8 @@ public class BasePage {
     private static final String DEFAULT_BROWSER = "Chrome";
     private static final String CHROME_BROWSER = DEFAULT_BROWSER;
     private static final String FIREFOX_BROWSER = "FireFox";
-    private static final long DEFAULT_TIMEOUT = 10;
-    private static final long DEFAULT_SLEEP_TIME = 1;
+    private static final long DEFAULT_TIMEOUT = 10L;
+    private static final long DEFAULT_SLEEP_TIME = 1000L;
 
     public BasePage() {
         String browser = (null == System.getenv("browser")) ? DEFAULT_BROWSER : System.getenv("browser");
