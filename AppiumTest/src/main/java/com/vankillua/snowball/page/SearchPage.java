@@ -3,14 +3,14 @@ package com.vankillua.snowball.page;
 import com.vankillua.common.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import java.lang.reflect.InvocationTargetException;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author KILLUA
  * @Date 2020/6/3 20:36
  * @Description
  */
+@Component
 public class SearchPage extends BasePage {
     private BasePage prePage;
 
@@ -28,13 +28,19 @@ public class SearchPage extends BasePage {
     private static final String SEARCH_RESULT = "//*[(@resource-id=\"com.xueqiu.android:id/name\" and @text=\"%s\") or (@resource-id=\"com.xueqiu.android:id/code\" and @text=\"%s\")]";
     private static final String SEARCH_RESULT_FOLLOW = "//*[(@resource-id=\"com.xueqiu.android:id/stockName\" and @text=\"%s\") or (@resource-id=\"com.xueqiu.android:id/stockCode\" and @text=\"%s\")]/ancestor::*[@resource-id=\"com.xueqiu.android:id/stock_layout\"]/following-sibling::*//*[@resource-id=\"com.xueqiu.android:id/follow_btn\"]";
 
-    private SearchPage() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(SEARCH_INPUT_TEXT));
-    }
+//    private SearchPage() {
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(SEARCH_INPUT_TEXT));
+//    }
 
-    public SearchPage(BasePage currentPage) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        this();
+//    public SearchPage(BasePage currentPage) {
+//        this();
+//        prePage = currentPage;
+//    }
+
+    SearchPage setPrePage(BasePage currentPage) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(SEARCH_INPUT_TEXT));
         prePage = currentPage;
+        return this;
     }
 
     SearchPage search(String keyword) {

@@ -1,0 +1,26 @@
+appium:
+  url: http://127.0.0.1:4723/wd/hub
+
+  capabilities:
+    deviceName: 127.0.0.1:7555
+    platformName: Android
+    automationName: UiAutomator2
+#    雪球App
+#    appPackage: com.xueqiu.android
+#    appActivity: .view.WelcomeActivityAlias
+#    企业微信App
+    appPackage: com.tencent.wework
+    appActivity: .launch.LaunchSplashActivity
+    noReset: true
+    noSign: true
+    unicodeKeyboard: true
+    resetKeyboard: true
+    skipDeviceInitialization: true
+    skipServerInstallation: true
+#   调试时需要设置，避免服务端认为客户端不再发送命令而关闭session
+    newCommandTimeout: 300
+
+  wait:
+    timeout: 10
+    sleepTime: 1000
+    implicitlyWait: 6

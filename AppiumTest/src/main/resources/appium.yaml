@@ -4,10 +4,14 @@ capabilities:
   deviceName: 127.0.0.1:7555
   platformName: Android
   automationName: UiAutomator2
+#  雪球App
+#  appPackage: com.xueqiu.android
+#  appActivity: .view.WelcomeActivityAlias
+# 企业微信App
+  appPackage: com.tencent.wework
+  appActivity: .launch.LaunchSplashActivity
   noReset: true
   noSign: true
-  appPackage: com.xueqiu.android
-  appActivity: .view.WelcomeActivityAlias
   unicodeKeyboard: true
   resetKeyboard: true
   skipDeviceInitialization: true

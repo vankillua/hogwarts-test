@@ -4,8 +4,8 @@ import com.vankillua.common.BasePage;
 import io.appium.java_client.MobileElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -13,6 +13,7 @@ import java.util.List;
  * @Date 2020/6/6 13:01
  * @Description
  */
+@Component
 public class QuotationEditPage extends BasePage {
     private BasePage prePage;
 
@@ -28,9 +29,15 @@ public class QuotationEditPage extends BasePage {
 
     private static final By CONFIRM_BUTTON = By.xpath("//*[@resource-id=\"com.xueqiu.android:id/tv_right\" and @text=\"确定\"]");
 
-    public QuotationEditPage(BasePage currentPage) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+//    public QuotationEditPage(BasePage currentPage) {
+//        wait.until(ExpectedConditions.elementToBeClickable(ACTION_CLOSE_BUTTON));
+//        prePage = currentPage;
+//    }
+
+    QuotationEditPage setPrePage(BasePage currentPage) {
         wait.until(ExpectedConditions.elementToBeClickable(ACTION_CLOSE_BUTTON));
         prePage = currentPage;
+        return this;
     }
 
     BasePage finishEdit() {

@@ -1,6 +1,10 @@
-package com.vankillua.common;
+package com.vankillua.bean;
 
-import java.util.HashMap;
+import com.vankillua.common.CommonPropertyResourceFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 
 /**
@@ -8,6 +12,9 @@ import java.util.Map;
  * @Date 2020/6/4 23:38
  * @Description
  */
+@Component
+@PropertySource(value = "classpath:appium-spring.yaml", encoding = "utf-8", factory = CommonPropertyResourceFactory.class)
+@ConfigurationProperties(prefix = "appium")
 public class AppiumYaml {
     private String url;
     private Map<String, Object> capabilities;

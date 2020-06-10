@@ -4,14 +4,17 @@ import com.vankillua.common.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
+import javax.annotation.PostConstruct;
 
 /**
  * @Author KILLUA
  * @Date 2020/6/3 20:35
  * @Description
  */
+@Component(value = "snowballMainPage")
 public class MainPage extends BasePage {
     private static final long LOAD_MAIN_PAGE_TIMEOUT = 30L;
 
@@ -26,18 +29,36 @@ public class MainPage extends BasePage {
     private static final By QUOTATION_TAB = By.xpath("//*[@text=\"行情\"]");
     private static final By TRADE_TAB = By.xpath("//*[@text=\"交易\"]");
 
-    public MainPage() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        super();
-        new WebDriverWait(driver, LOAD_MAIN_PAGE_TIMEOUT).until(ExpectedConditions.elementToBeClickable(HOME_SEARCH));
+    private SearchPage searchPage;
+    private QuotationPage quotationPage;
+
+    @Autowired
+    public void setSearchPage(SearchPage searchPage) {
+        this.searchPage = searchPage;
     }
 
-    public SearchPage toSearchPage() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    @Autowired
+    public void setQuotationPage(QuotationPage quotationPage) {
+        this.quotationPage = quotationPage;
+    }
+
+//    public MainPage() {
+//        new WebDriverWait(driver, LOAD_MAIN_PAGE_TIMEOUT).until(ExpectedConditions.elementToBeClickable(HOME_SEARCH));
+//    }
+
+//    @PostConstruct
+//    void waitMainPage() {
+//        new WebDriverWait(driver, LOAD_MAIN_PAGE_TIMEOUT).until(ExpectedConditions.elementToBeClickable(HOME_SEARCH));
+//    }
+
+    public SearchPage toSearchPage() {
         click(HOME_SEARCH);
-        return new SearchPage(this);
+        return searchPage.setPrePage(this);
     }
 
-    public QuotationPage toQuotationPage() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public QuotationPage toQuotationPage() {
         click(QUOTATION_TAB);
-        return new QuotationPage();
+        return quotationPage.setPrePage(this);
     }
+
 }

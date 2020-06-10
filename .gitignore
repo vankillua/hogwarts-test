@@ -2,5 +2,7 @@
 */target
 *.class
 *.iml
+*.ipr
+*.iws
 */allure-results
 **/cookies.json

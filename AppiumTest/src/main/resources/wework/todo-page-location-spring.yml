@@ -1,0 +1,18 @@
+# 待办页
+todo:
+  # 新建按钮
+  addButton: //*[@resource-id="com.tencent.wework:id/gym"]
+  # 返回按钮
+  backButton: //*[@resource-id="com.tencent.wework:id/gyb"]
+  # 待办列表
+  todoList: //*[@resource-id="com.tencent.wework:id/gwn"]/*[@class="android.widget.LinearLayout"]
+  # 待办列表中的完成按钮
+  completeButton: //*[@resource-id="com.tencent.wework:id/gwt"]
+  # 待办列表中的待办信息
+  todoText: //*[@resource-id="com.tencent.wework:id/gw9"]
+
+  # 新建待办页
+  save:
+    closeButton: //*[@resource-id="com.tencent.wework:id/a27"]
+    saveButton: //*[@text="保存" and @class="android.widget.Button"]
+    todoTextInput: //*[@resource-id="com.tencent.wework:id/b2k"]
