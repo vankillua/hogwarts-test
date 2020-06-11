@@ -1,0 +1,10 @@
+report:
+  backButton: //*[@resource-id="com.tencent.wework:id/gyb"]
+  dailyButton: resourceId("com.tencent.wework:id/ee6").text("日报")
+
+  daily:
+    backButton: //*[@resource-id="com.tencent.wework:id/gyb"]
+    todayJobInput: description("日报").childSelector(className("android.widget.EditText").instance(0))
+    tomorrowPlanInput: description("日报").childSelector(className("android.widget.EditText").instance(1))
+    submitButton: description("日报").description("提交")
+    confirmButton: //*[@resource-id="com.tencent.wework:id/b_o" and @text="确定"]

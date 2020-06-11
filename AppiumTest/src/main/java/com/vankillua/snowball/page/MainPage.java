@@ -2,12 +2,10 @@ package com.vankillua.snowball.page;
 
 import com.vankillua.common.BasePage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @Author KILLUA
@@ -16,6 +14,8 @@ import javax.annotation.PostConstruct;
  */
 @Component(value = "snowballMainPage")
 public class MainPage extends BasePage {
+    private static final Logger logger = LoggerFactory.getLogger(MainPage.class);
+
     private static final long LOAD_MAIN_PAGE_TIMEOUT = 30L;
 
     /**
@@ -42,23 +42,27 @@ public class MainPage extends BasePage {
         this.quotationPage = quotationPage;
     }
 
-//    public MainPage() {
-//        new WebDriverWait(driver, LOAD_MAIN_PAGE_TIMEOUT).until(ExpectedConditions.elementToBeClickable(HOME_SEARCH));
-//    }
+    @Override
+    @SuppressWarnings("unchecked")
+    protected MainPage waitForPage() {
+        if (!isExists(HOME_SEARCH, LOAD_MAIN_PAGE_TIMEOUT)) {
+            logger.warn("等待超时，首页仍未加载完成");
+        }
+        return this;
+    }
 
-//    @PostConstruct
-//    void waitMainPage() {
-//        new WebDriverWait(driver, LOAD_MAIN_PAGE_TIMEOUT).until(ExpectedConditions.elementToBeClickable(HOME_SEARCH));
-//    }
+    @Override
+    protected MainPage setPrePage(BasePage currentPage) {
+        return this;
+    }
 
     public SearchPage toSearchPage() {
         click(HOME_SEARCH);
-        return searchPage.setPrePage(this);
+        return searchPage.waitForPage().setPrePage(this);
     }
 
     public QuotationPage toQuotationPage() {
         click(QUOTATION_TAB);
-        return quotationPage.setPrePage(this);
+        return quotationPage.waitForPage().setPrePage(this);
     }
-
 }

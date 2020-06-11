@@ -2,6 +2,7 @@ package com.vankillua.utils;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.functions.AppiumFunction;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.openqa.selenium.By;
@@ -19,7 +20,7 @@ import java.util.Objects;
  * @Description
  */
 public class AppiumExpectedConditions {
-    private final static Logger logger = LoggerFactory.getLogger(AppiumExpectedConditions.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppiumExpectedConditions.class);
 
     private AppiumExpectedConditions() {}
 
@@ -39,7 +40,7 @@ public class AppiumExpectedConditions {
         };
     }
 
-    public static AppiumFunction<AppiumDriver<MobileElement>, MobileElement> presenceOfNestedElementLocatedBy(
+    public static AppiumFunction<AppiumDriver<MobileElement>, MobileElement> presenceOfNestedElementLocated(
             final MobileElement element, final By childLocator) {
         return new AppiumFunction<AppiumDriver<MobileElement>, MobileElement>() {
             @NullableDecl
@@ -172,6 +173,40 @@ public class AppiumExpectedConditions {
             @Override
             public String toString() {
                 return "visibility of element located by " + childLocator;
+            }
+        };
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, MobileElement> presenceOfAndroidUILocated(
+            final String using) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, MobileElement>() {
+            @NullableDecl
+            @Override
+            public MobileElement apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                return ((AndroidDriver<MobileElement>) Objects.requireNonNull(input)).findElementByAndroidUIAutomator(using);
+            }
+
+            @Override
+            public String toString() {
+                return "presence of android ui located by: " + using;
+            }
+        };
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, List<MobileElement>> presenceOfAllAndroidUILocated(
+            final String using) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, List<MobileElement>>() {
+            @NullableDecl
+            @Override
+            public List<MobileElement> apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                List<MobileElement> elements = ((AndroidDriver<MobileElement>) Objects.requireNonNull(input))
+                        .findElementsByAndroidUIAutomator(using);
+                return elements.isEmpty() ? null : elements;
+            }
+
+            @Override
+            public String toString() {
+                return "presence of any android ui located by " + using;
             }
         };
     }

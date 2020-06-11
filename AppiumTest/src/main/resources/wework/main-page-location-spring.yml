@@ -1,5 +1,6 @@
 main:
-  schedule: //*[@resource-id="com.tencent.wework:id/ag9" and @text="日程"]
+  scheduleButton: //*[@resource-id="com.tencent.wework:id/ag9" and @text="日程"]
   # 待办按钮后面有可能有数字，所以使用contains
-  todo: //*[@resource-id="com.tencent.wework:id/gwu" and contains(@text, "待办")]
-  workbench: //*[@resource-id="com.tencent.wework:id/dsp" and @text="工作台"]
+  todoButton: //*[@resource-id="com.tencent.wework:id/gwu" and contains(@text, "待办")]
+  messageButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="消息"]
+  workbenchButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="工作台"]

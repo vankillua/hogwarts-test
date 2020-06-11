@@ -1,0 +1,4 @@
+workbench:
+  manageButton: //*[@resource-id="com.tencent.wework:id/gym"]
+  # 需要使用AndroidUIAutomator进行定位
+  reportButton: resourceId("com.tencent.wework:id/ee6").text("汇报")

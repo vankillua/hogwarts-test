@@ -4,9 +4,8 @@ import com.vankillua.common.BasePage;
 import com.vankillua.wework.bean.TodoPageLocation;
 import io.appium.java_client.MobileElement;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +21,8 @@ import java.util.stream.Collectors;
  */
 @Component
 public class TodoPage extends BasePage {
+    private static final Logger logger = LoggerFactory.getLogger(TodoPage.class);
+
     private BasePage prePage;
 
     private TodoPageLocation todoPageLocation;
@@ -38,21 +39,41 @@ public class TodoPage extends BasePage {
         this.saveTodoPage = saveTodoPage;
     }
 
-    TodoPage setPrePage(BasePage currentPage) {
+    @Override
+    @SuppressWarnings("unchecked")
+    protected TodoPage waitForPage() {
+        int times = WAIT_TIMES;
+        do {
+            if (isExists(todoPageLocation.getBackButton())) {
+                break;
+            }
+        } while (0 < --times);
+        if (0 == times) {
+            logger.error("等待超时，待办页仍未加载完成");
+        }
+        return this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected TodoPage setPrePage(BasePage currentPage) {
         prePage = currentPage;
         return this;
     }
 
     TodoPage addTodo(String todoText) {
         click(todoPageLocation.getAddButton());
-        saveTodoPage.saveTodo(todoText);
+        saveTodoPage.addTodo(todoText);
         // 等待todoPageLocation.getAddButton()出现再结束此方法
-        int times = 3;
+        int times = WAIT_TIMES;
         do {
             if (isExists(todoPageLocation.getAddButton())) {
                 break;
             }
         } while (0 < --times);
+        if (0 == times) {
+            logger.warn("等待超时，未从新建待办页返回到待办页");
+        }
         return this;
     }
 
@@ -61,7 +82,7 @@ public class TodoPage extends BasePage {
             String text = find(element, todoPageLocation.getTodoText()).getText();
             if (todoText.equals(text)) {
                 click(find(element, todoPageLocation.getCompleteButton()));
-                int times = 3;
+                int times = WAIT_TIMES;
                 // 等待待办任务消失
                 do {
                     try {
@@ -84,7 +105,7 @@ public class TodoPage extends BasePage {
         while (!elements.isEmpty()) {
             MobileElement element = elements.get(0);
             click(find(element, todoPageLocation.getCompleteButton()));
-            int times = 3;
+            int times = WAIT_TIMES;
             // 等待待办任务消失
             do {
                 try {

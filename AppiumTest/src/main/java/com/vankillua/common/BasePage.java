@@ -5,6 +5,7 @@ import com.vankillua.utils.AppiumExpectedConditions;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.AppiumFluentWait;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -35,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * @Description
  */
 @Component
-public class BasePage {
+public abstract class BasePage {
     private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
 
     protected AppiumDriver<MobileElement> driver;
@@ -54,6 +55,10 @@ public class BasePage {
     private static final String IOS_PLATFORM = "iOS";
     private static final long DEFAULT_TIMEOUT = 10L;
     private static final long DEFAULT_SLEEP_TIME = 1000L;
+
+    protected static int WAIT_TIMES = 3;
+    protected static String UI_SELECTOR = "new UiSelector().";
+    protected static String UI_SCROLLABLE = "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(%s)";
 
     @Autowired
     public void setAppiumYaml(AppiumYaml appiumYaml) {
@@ -116,8 +121,25 @@ public class BasePage {
         implicitlyWait = appiumYaml.getWait().getOrDefault("implicitlyWait", 0L);
     }
 
+    /**
+     * 每个PO需要实现一个方法，用于切换到改页面时等待加载完成
+     * @return 继承BasePage的泛型，用于返回当前PO
+     */
+    protected abstract <T extends BasePage> T waitForPage();
+
+    /**
+     * 每个PO可以根据需要实现一个方法，用于记录切换页面前的页面，便于后面返回切换前的页面
+     * @param currentPage 切换页面前的PO
+     * @return 切换页面后的PO
+     */
+    protected abstract <T extends BasePage> T setPrePage(T currentPage);
+
     public static By getXpath(Object o) {
         return o instanceof By ? (By) o : By.xpath((String) o);
+    }
+
+    public static String getUIAutomator(String s) {
+        return s.startsWith(UI_SELECTOR) ? s : UI_SELECTOR + s;
     }
 
     public void click(Object object) {
@@ -179,7 +201,7 @@ public class BasePage {
 
     public MobileElement find(MobileElement element, Object object) {
         try {
-            return wait.until(AppiumExpectedConditions.presenceOfNestedElementLocatedBy(element, getXpath(object)));
+            return wait.until(AppiumExpectedConditions.presenceOfNestedElementLocated(element, getXpath(object)));
         } catch (TimeoutException ignored) {
             return null;
         }
@@ -192,7 +214,7 @@ public class BasePage {
             } else {
                 return new AppiumFluentWait<>(driver)
                         .withTimeout(Duration.ofSeconds(timeoutInSeconds))
-                        .until(AppiumExpectedConditions.presenceOfNestedElementLocatedBy(element, getXpath(object)));
+                        .until(AppiumExpectedConditions.presenceOfNestedElementLocated(element, getXpath(object)));
             }
         } catch (TimeoutException ignored) {
             return null;
@@ -287,6 +309,15 @@ public class BasePage {
         } catch (TimeoutException ignored) {
             return false;
         }
+    }
+
+    public MobileElement findUi(String ui) {
+        return wait.until(AppiumExpectedConditions.presenceOfAndroidUILocated(getUIAutomator(ui)));
+    }
+
+    public MobileElement scrollToUi(String ui) {
+        String uiScrollable = String.format(UI_SCROLLABLE, getUIAutomator(ui));
+        return ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(uiScrollable);
     }
 
     public void quit() {

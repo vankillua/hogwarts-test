@@ -3,6 +3,8 @@ package com.vankillua.snowball.page;
 import com.vankillua.common.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SearchPage extends BasePage {
+    private static final Logger logger = LoggerFactory.getLogger(SearchPage.class);
+
     private BasePage prePage;
 
     /**
@@ -28,17 +32,18 @@ public class SearchPage extends BasePage {
     private static final String SEARCH_RESULT = "//*[(@resource-id=\"com.xueqiu.android:id/name\" and @text=\"%s\") or (@resource-id=\"com.xueqiu.android:id/code\" and @text=\"%s\")]";
     private static final String SEARCH_RESULT_FOLLOW = "//*[(@resource-id=\"com.xueqiu.android:id/stockName\" and @text=\"%s\") or (@resource-id=\"com.xueqiu.android:id/stockCode\" and @text=\"%s\")]/ancestor::*[@resource-id=\"com.xueqiu.android:id/stock_layout\"]/following-sibling::*//*[@resource-id=\"com.xueqiu.android:id/follow_btn\"]";
 
-//    private SearchPage() {
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(SEARCH_INPUT_TEXT));
-//    }
+    @Override
+    @SuppressWarnings("unchecked")
+    protected SearchPage waitForPage() {
+        if (!isExists(SEARCH_INPUT_TEXT)) {
+            logger.warn("等待超时，搜索页仍未加载完成");
+        }
+        return this;
+    }
 
-//    public SearchPage(BasePage currentPage) {
-//        this();
-//        prePage = currentPage;
-//    }
-
-    SearchPage setPrePage(BasePage currentPage) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(SEARCH_INPUT_TEXT));
+    @Override
+    @SuppressWarnings("unchecked")
+    protected SearchPage setPrePage(BasePage currentPage) {
         prePage = currentPage;
         return this;
     }

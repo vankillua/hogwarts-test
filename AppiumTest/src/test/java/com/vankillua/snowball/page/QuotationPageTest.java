@@ -40,11 +40,6 @@ public class QuotationPageTest {
         mainPage.toQuotationPage();
     }
 
-//    @BeforeEach
-//    void beforeEach() {
-//        mainPage.toQuotationPage();
-//    }
-
     @Test
     @Order(1)
     @DisplayName("取消关注全部自选股票")

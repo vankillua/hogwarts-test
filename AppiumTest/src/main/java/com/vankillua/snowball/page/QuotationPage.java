@@ -3,7 +3,8 @@ package com.vankillua.snowball.page;
 import com.vankillua.common.BasePage;
 import io.appium.java_client.MobileElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,13 @@ import java.util.stream.Collectors;
  * @Author KILLUA
  * @Date 2020/6/6 10:42
  * @Description
+ *
+ * 行情页
  */
 @Component
 public class QuotationPage extends BasePage {
+    private static final Logger logger = LoggerFactory.getLogger(QuotationPage.class);
+
     private BasePage prePage;
 
     /**
@@ -43,24 +48,30 @@ public class QuotationPage extends BasePage {
         this.quotationEditPage = quotationEditPage;
     }
 
-//    public QuotationPage() {
-//        wait.until(ExpectedConditions.elementToBeClickable(ACTION_SEARCH_BUTTON));
-//    }
+    @Override
+    @SuppressWarnings("unchecked")
+    protected QuotationPage waitForPage() {
+        if (!isExists(ACTION_SEARCH_BUTTON)) {
+            logger.warn("等待超时，行情页仍未加载完成");
+        }
+        return this;
+    }
 
-    QuotationPage setPrePage(BasePage currentPage) {
-        wait.until(ExpectedConditions.elementToBeClickable(ACTION_SEARCH_BUTTON));
+    @Override
+    @SuppressWarnings("unchecked")
+    protected QuotationPage setPrePage(BasePage currentPage) {
         prePage = currentPage;
         return this;
     }
 
     SearchPage toSearchPage() {
         click(ACTION_SEARCH_BUTTON);
-        return searchPage.setPrePage(this);
+        return searchPage.waitForPage().setPrePage(this);
     }
 
     QuotationEditPage toEditPage() {
         click(EDIT_BUTTON);
-        return quotationEditPage.setPrePage(this);
+        return quotationEditPage.waitForPage().setPrePage(this);
     }
 
     List<MobileElement> getMyChosenStocks() {
