@@ -14,10 +14,18 @@ import org.springframework.stereotype.Component;
 @PropertySource(value = "classpath:wework/main-page-location-spring.yml", encoding = "utf-8", factory = CommonPropertyResourceFactory.class)
 @ConfigurationProperties(prefix = "main")
 public class MainPageLocation {
+    private String moreButton;
+
     private String scheduleButton;
     private String todoButton;
-    private String messageButton;
-    private String workbenchButton;
+
+    public String getMoreButton() {
+        return moreButton;
+    }
+
+    public void setMoreButton(String moreButton) {
+        this.moreButton = moreButton;
+    }
 
     public String getScheduleButton() {
         return scheduleButton;
@@ -33,21 +41,5 @@ public class MainPageLocation {
 
     public void setTodoButton(String todoButton) {
         this.todoButton = todoButton;
-    }
-
-    public String getMessageButton() {
-        return messageButton;
-    }
-
-    public void setMessageButton(String messageButton) {
-        this.messageButton = messageButton;
-    }
-
-    public String getWorkbenchButton() {
-        return workbenchButton;
-    }
-
-    public void setWorkbenchButton(String workbenchButton) {
-        this.workbenchButton = workbenchButton;
     }
 }

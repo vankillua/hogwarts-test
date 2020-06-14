@@ -6,7 +6,9 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.functions.AppiumFunction;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,7 +179,89 @@ public class AppiumExpectedConditions {
         };
     }
 
-    public static AppiumFunction<AppiumDriver<MobileElement>, MobileElement> presenceOfAndroidUILocated(
+    public static AppiumFunction<AppiumDriver<MobileElement>, Boolean> invisibilityOf(final MobileElement element) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, Boolean>() {
+            @NullableDecl
+            @Override
+            public Boolean apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                return isInvisible(element);
+            }
+
+            @Override
+            public String toString() {
+                return "invisibility of " + element;
+            }
+        };
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, Boolean> invisibilityOfElementLocated(
+            final By locator) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, Boolean>() {
+            @NullableDecl
+            @Override
+            public Boolean apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                try {
+                    return !(Objects.requireNonNull(input).findElement(locator).isDisplayed());
+                } catch (NoSuchElementException | StaleElementReferenceException e) {
+                    // Returns true because the element is not present in DOM. The try block checks if the element is present but is invisible.
+                    // Returns true because stale element reference implies that element is no longer visible.
+                    return true;
+                }
+            }
+
+            @Override
+            public String toString() {
+                return "element to no longer be visible: " + locator;
+            }
+        };
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, Boolean> invisibilityOfNestedElementLocated(
+            final MobileElement element, final By childLocator) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, Boolean>() {
+            @NullableDecl
+            @Override
+            public Boolean apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                try {
+                    return !(element.findElement(childLocator).isDisplayed());
+                } catch (NoSuchElementException | StaleElementReferenceException ignored) {
+                    return true;
+                }
+            }
+
+            @Override
+            public String toString() {
+                return "child element to no longer be visible: " + childLocator;
+            }
+        };
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, Boolean> invisibilityOfAllElements(
+            final List<MobileElement> elements) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, Boolean>() {
+            @NullableDecl
+            @Override
+            public Boolean apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                return elements.stream().allMatch(AppiumExpectedConditions::isInvisible);
+            }
+
+            @Override
+            public String toString() {
+                return "invisibility of all elements " + elements;
+            }
+        };
+    }
+
+    private static boolean isInvisible(final MobileElement element) {
+        try {
+            return !element.isDisplayed();
+        } catch (StaleElementReferenceException ignored) {
+            // We can assume a stale element isn't displayed.
+            return true;
+        }
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, MobileElement> presenceOfAndroidUiLocated(
             final String using) {
         return new AppiumFunction<AppiumDriver<MobileElement>, MobileElement>() {
             @NullableDecl
@@ -193,7 +277,7 @@ public class AppiumExpectedConditions {
         };
     }
 
-    public static AppiumFunction<AppiumDriver<MobileElement>, List<MobileElement>> presenceOfAllAndroidUILocated(
+    public static AppiumFunction<AppiumDriver<MobileElement>, List<MobileElement>> presenceOfAllAndroidUiLocated(
             final String using) {
         return new AppiumFunction<AppiumDriver<MobileElement>, List<MobileElement>>() {
             @NullableDecl

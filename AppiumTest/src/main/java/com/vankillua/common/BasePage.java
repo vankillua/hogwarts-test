@@ -7,6 +7,7 @@ import io.appium.java_client.AppiumFluentWait;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
@@ -27,6 +28,7 @@ import java.nio.file.NoSuchFileException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -56,9 +58,9 @@ public abstract class BasePage {
     private static final long DEFAULT_TIMEOUT = 10L;
     private static final long DEFAULT_SLEEP_TIME = 1000L;
 
-    protected static int WAIT_TIMES = 3;
-    protected static String UI_SELECTOR = "new UiSelector().";
-    protected static String UI_SCROLLABLE = "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(%s)";
+    protected static final int WAIT_TIMES = 3;
+    protected static final String UI_SELECTOR = "new UiSelector().";
+    protected static final String UI_SCROLLABLE = "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(%s)";
 
     @Autowired
     public void setAppiumYaml(AppiumYaml appiumYaml) {
@@ -85,7 +87,7 @@ public abstract class BasePage {
     @Deprecated
     private static void loadYaml() throws IOException {
         Yaml yaml = new Yaml();
-        InputStream is = BasePage.class.getClassLoader().getResourceAsStream("appium.yaml");
+        InputStream is = BasePage.class.getClassLoader().getResourceAsStream("appium.yml");
         if (Optional.ofNullable(is).isPresent()) {
             AppiumYaml appiumYaml = yaml.loadAs(is, AppiumYaml.class);
             is.close();
@@ -102,7 +104,7 @@ public abstract class BasePage {
             sleepTime = appiumYaml.getWait().getOrDefault("sleepTime", DEFAULT_SLEEP_TIME);
             implicitlyWait = appiumYaml.getWait().getOrDefault("implicitlyWait", 0L);
         } else {
-            throw new NoSuchFileException("appium.yaml");
+            throw new NoSuchFileException("appium.yml");
         }
     }
 
@@ -274,15 +276,12 @@ public abstract class BasePage {
     }
 
     public boolean isExists(Object object, long timeoutInSeconds) {
+        timeoutInSeconds = (0 >= timeoutInSeconds) ? 1 : timeoutInSeconds;
         try {
-            if (0 >= timeoutInSeconds) {
-                return !driver.findElements(getXpath(object)).isEmpty();
-            } else {
-                return !new AppiumFluentWait<>(driver)
-                        .withTimeout(Duration.ofSeconds(timeoutInSeconds))
-                        .until(AppiumExpectedConditions.visibilityOfAllElementsLocatedBy(getXpath(object)))
-                        .isEmpty();
-            }
+            return !new AppiumFluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(timeoutInSeconds))
+                    .until(AppiumExpectedConditions.visibilityOfAllElementsLocatedBy(getXpath(object)))
+                    .isEmpty();
         } catch (TimeoutException ignored) {
             return false;
         }
@@ -297,22 +296,57 @@ public abstract class BasePage {
     }
 
     public boolean isExists(MobileElement element, Object object, long timeoutInSeconds) {
+        timeoutInSeconds = (0 >= timeoutInSeconds) ? 1 : timeoutInSeconds;
         try {
-            if (0 >= timeoutInSeconds) {
-                return !driver.findElements(getXpath(object)).isEmpty();
-            } else {
-                return !new AppiumFluentWait<>(driver)
-                        .withTimeout(Duration.ofSeconds(timeoutInSeconds))
-                        .until(AppiumExpectedConditions.visibilityOfNestedElementsLocatedBy(element, getXpath(object)))
-                        .isEmpty();
-            }
+            return !new AppiumFluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(timeoutInSeconds))
+                    .until(AppiumExpectedConditions.visibilityOfNestedElementsLocatedBy(element, getXpath(object)))
+                    .isEmpty();
+        } catch (TimeoutException ignored) {
+            return false;
+        }
+    }
+
+    public boolean isNotExists(Object object) {
+        try {
+            return wait.until(AppiumExpectedConditions.invisibilityOfElementLocated(getXpath(object)));
+        } catch (TimeoutException ignored) {
+            return false;
+        }
+    }
+
+    public boolean isNotExists(Object object, long timeoutInSeconds) {
+        timeoutInSeconds = (0 >= timeoutInSeconds) ? 1 : timeoutInSeconds;
+        try {
+            return new AppiumFluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(timeoutInSeconds))
+                    .until(AppiumExpectedConditions.invisibilityOfElementLocated(getXpath(object)));
+        } catch (TimeoutException ignored) {
+            return false;
+        }
+    }
+
+    public boolean isNotExists(MobileElement element, Object object) {
+        try {
+            return wait.until(AppiumExpectedConditions.invisibilityOfNestedElementLocated(element, getXpath(object)));
+        } catch (TimeoutException ignored) {
+            return false;
+        }
+    }
+
+    public boolean isNotExists(MobileElement element, Object object, long timeoutInSeconds) {
+        timeoutInSeconds = (0 >= timeoutInSeconds) ? 1 : timeoutInSeconds;
+        try {
+            return new AppiumFluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(timeoutInSeconds))
+                    .until(AppiumExpectedConditions.invisibilityOfNestedElementLocated(element, getXpath(object)));
         } catch (TimeoutException ignored) {
             return false;
         }
     }
 
     public MobileElement findUi(String ui) {
-        return wait.until(AppiumExpectedConditions.presenceOfAndroidUILocated(getUIAutomator(ui)));
+        return wait.until(AppiumExpectedConditions.presenceOfAndroidUiLocated(getUIAutomator(ui)));
     }
 
     public MobileElement scrollToUi(String ui) {

@@ -1,22 +1,19 @@
-package com.vankillua.wework.page;
+package com.vankillua.wework.page.message;
 
+import com.vankillua.wework.page.MainPage;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.DependsOn;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
@@ -61,7 +58,7 @@ class TodoPageTest {
         void addTodo(String todoText) {
             List<String> todoTextList = todoPage.addTodo(todoText).getTodoTextList();
             assertThat("新建待办任务失败，当前待办任务数为0", todoTextList.size(), is(greaterThanOrEqualTo(1)));
-            assertThat("当前待办列表第一项不是刚新建的待办任务", todoTextList.get(0), is(todoText));
+            assertThat("新建待办任务失败，当前待办列表第一项不是刚新建的待办任务", todoTextList.get(0), is(todoText));
             logger.info("新建【" + todoText + "】待办任务成功");
         }
 

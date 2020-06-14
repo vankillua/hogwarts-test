@@ -1,4 +1,4 @@
-package com.vankillua.wework.bean;
+package com.vankillua.wework.bean.message;
 
 import com.vankillua.common.CommonPropertyResourceFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;

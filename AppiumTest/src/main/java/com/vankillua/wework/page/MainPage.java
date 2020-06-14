@@ -1,7 +1,9 @@
 package com.vankillua.wework.page;
 
 import com.vankillua.common.BasePage;
+import com.vankillua.wework.bean.BottomMenuLocation;
 import com.vankillua.wework.bean.MainPageLocation;
+import com.vankillua.wework.page.message.TodoPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class MainPage extends BasePage {
 
     private MainPageLocation mainPageLocation;
 
+    private BottomMenuLocation bottomMenuLocation;
+
     private TodoPage todoPage;
 
     private WorkbenchPage workbenchPage;
@@ -27,6 +31,11 @@ public class MainPage extends BasePage {
     @Autowired
     void setMainPageLocation(MainPageLocation mainPageLocation) {
         this.mainPageLocation = mainPageLocation;
+    }
+
+    @Autowired
+    void setBottomMenuLocation(BottomMenuLocation bottomMenuLocation) {
+        this.bottomMenuLocation = bottomMenuLocation;
     }
 
     @Autowired
@@ -41,31 +50,32 @@ public class MainPage extends BasePage {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected MainPage waitForPage() {
+    public MainPage waitForPage() {
         int times = WAIT_TIMES;
         do {
-            if (isExists(mainPageLocation.getMessageButton())) {
+            if (isExists(mainPageLocation.getMoreButton())) {
                 break;
             }
         } while (0 < --times);
         if (0 == times) {
             logger.warn("等待超时，消息页仍未加载完成");
         }
-        return null;
+        return this;
     }
 
     @Override
-    protected <T extends BasePage> T setPrePage(T currentPage) {
+    @SuppressWarnings("unchecked")
+    public MainPage setPrePage(BasePage currentPage) {
         return null;
     }
 
-    TodoPage toTodoPage() {
+    public TodoPage toTodoPage() {
         click(mainPageLocation.getTodoButton());
         return todoPage.waitForPage().setPrePage(this);
     }
 
-    WorkbenchPage toWorkbenchPage() {
-        click(mainPageLocation.getWorkbenchButton());
+    public WorkbenchPage toWorkbenchPage() {
+        click(bottomMenuLocation.getWorkbenchMenu());
         return workbenchPage.waitForPage().setPrePage(this);
     }
 }

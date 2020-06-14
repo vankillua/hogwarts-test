@@ -1,4 +1,4 @@
-package com.vankillua.wework.bean;
+package com.vankillua.wework.bean.workbench;
 
 import com.vankillua.common.CommonPropertyResourceFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PropertySource(value = "classpath:wework/report-page-location-spring.yml", encoding = "utf-8", factory = CommonPropertyResourceFactory.class)
-@ConfigurationProperties(prefix = "report.daily")
-public class DailyReportPageLocation {
+@ConfigurationProperties(prefix = "report.create.daily")
+public class PeriodReportPageLocation {
     private String backButton;
-    private String todayJobInput;
-    private String tomorrowPlanInput;
+    private String jobInput;
+    private String planInput;
     private String submitButton;
     private String confirmButton;
 
@@ -28,20 +28,20 @@ public class DailyReportPageLocation {
         this.backButton = backButton;
     }
 
-    public String getTodayJobInput() {
-        return todayJobInput;
+    public String getJobInput() {
+        return jobInput;
     }
 
-    public void setTodayJobInput(String todayJobInput) {
-        this.todayJobInput = todayJobInput;
+    public void setJobInput(String jobInput) {
+        this.jobInput = jobInput;
     }
 
-    public String getTomorrowPlanInput() {
-        return tomorrowPlanInput;
+    public String getPlanInput() {
+        return planInput;
     }
 
-    public void setTomorrowPlanInput(String tomorrowPlanInput) {
-        this.tomorrowPlanInput = tomorrowPlanInput;
+    public void setPlanInput(String planInput) {
+        this.planInput = planInput;
     }
 
     public String getSubmitButton() {

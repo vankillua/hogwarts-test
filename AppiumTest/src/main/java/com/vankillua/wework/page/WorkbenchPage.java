@@ -1,7 +1,9 @@
 package com.vankillua.wework.page;
 
 import com.vankillua.common.BasePage;
+import com.vankillua.wework.bean.BottomMenuLocation;
 import com.vankillua.wework.bean.WorkbenchLocation;
+import com.vankillua.wework.page.workbench.ReportPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,11 @@ public class WorkbenchPage extends BasePage {
 
     private WorkbenchLocation workbenchLocation;
 
+    private BottomMenuLocation bottomMenuLocation;
+
     private ReportPage reportPage;
+
+    private MainPage mainPage;
 
     @Autowired
     void setWorkbenchLocation(WorkbenchLocation workbenchLocation) {
@@ -28,13 +34,23 @@ public class WorkbenchPage extends BasePage {
     }
 
     @Autowired
+    void setBottomMenuLocation(BottomMenuLocation bottomMenuLocation) {
+        this.bottomMenuLocation = bottomMenuLocation;
+    }
+
+    @Autowired
     void setReportPage(ReportPage reportPage) {
         this.reportPage = reportPage;
     }
 
+    @Autowired
+    void setMainPage(MainPage mainPage) {
+        this.mainPage = mainPage;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
-    protected WorkbenchPage waitForPage() {
+    public WorkbenchPage waitForPage() {
         int times = WAIT_TIMES;
         do {
             if (isExists(workbenchLocation.getManageButton())) {
@@ -49,13 +65,18 @@ public class WorkbenchPage extends BasePage {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected WorkbenchPage setPrePage(BasePage currentPage) {
+    public WorkbenchPage setPrePage(BasePage currentPage) {
         prePage = currentPage;
         return this;
     }
 
-    ReportPage toReportPage() {
+    public ReportPage toReportPage() {
         scrollToUi(workbenchLocation.getReportButton()).click();
         return reportPage.waitForPage().setPrePage(this);
+    }
+
+    public MainPage backToMainPage() {
+        click(bottomMenuLocation.getMessageMenu());
+        return mainPage.waitForPage().setPrePage(this);
     }
 }

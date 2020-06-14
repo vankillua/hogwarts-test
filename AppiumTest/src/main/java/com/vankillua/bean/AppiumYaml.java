@@ -13,7 +13,7 @@ import java.util.Map;
  * @Description
  */
 @Component
-@PropertySource(value = "classpath:appium-spring.yaml", encoding = "utf-8", factory = CommonPropertyResourceFactory.class)
+@PropertySource(value = "classpath:appium-spring.yml", encoding = "utf-8", factory = CommonPropertyResourceFactory.class)
 @ConfigurationProperties(prefix = "appium")
 public class AppiumYaml {
     private String url;

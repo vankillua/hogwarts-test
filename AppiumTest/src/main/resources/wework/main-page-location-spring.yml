@@ -1,6 +1,8 @@
+# 消息页面
 main:
+  #右上角更多按钮
+  moreButton: //*[@resource-id="com.tencent.wework:id/gym"]
+  # 上方日程按钮
   scheduleButton: //*[@resource-id="com.tencent.wework:id/ag9" and @text="日程"]
-  # 待办按钮后面有可能有数字，所以使用contains
+  # 上方待办按钮（待办按钮后面有可能有数字，所以使用contains）
   todoButton: //*[@resource-id="com.tencent.wework:id/gwu" and contains(@text, "待办")]
-  messageButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="消息"]
-  workbenchButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="工作台"]

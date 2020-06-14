@@ -1,0 +1,9 @@
+bottom:
+  # 下方消息页按钮
+  messageMenu: //*[@resource-id="com.tencent.wework:id/dsp" and @text="消息"]
+  # 下方通讯录页按钮
+  contactMenu: //*[@resource-id="com.tencent.wework:id/dsp" and @text="通讯录"]
+  # 下方工作台页按钮
+  workbenchMenu: //*[@resource-id="com.tencent.wework:id/dsp" and @text="工作台"]
+  # 下方我页按钮
+  mineMenu: //*[@resource-id="com.tencent.wework:id/dsp" and @text="我"]

@@ -1,7 +1,7 @@
-package com.vankillua.wework.page;
+package com.vankillua.wework.page.message;
 
 import com.vankillua.common.BasePage;
-import com.vankillua.wework.bean.SaveTodoPageLocation;
+import com.vankillua.wework.bean.message.SaveTodoPageLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

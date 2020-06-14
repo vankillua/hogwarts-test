@@ -1,10 +1,76 @@
 report:
-  backButton: //*[@resource-id="com.tencent.wework:id/gyb"]
-  dailyButton: resourceId("com.tencent.wework:id/ee6").text("日报")
+  # 上方返回按钮
+  backButton: &backButton //*[@resource-id="com.tencent.wework:id/gyb"]
+  # 下方菜单（新建、记录、统计、模板）
+  createMenu: //*[@resource-id="com.tencent.wework:id/dnj"]
+  recordMenu: //*[@resource-id="com.tencent.wework:id/f8p"]
+  statisticMenu: //*[@resource-id="com.tencent.wework:id/gbx"]
+  templateMenu: //*[@resource-id="com.tencent.wework:id/gok"]
 
-  daily:
-    backButton: //*[@resource-id="com.tencent.wework:id/gyb"]
-    todayJobInput: description("日报").childSelector(className("android.widget.EditText").instance(0))
-    tomorrowPlanInput: description("日报").childSelector(className("android.widget.EditText").instance(1))
-    submitButton: description("日报").description("提交")
-    confirmButton: //*[@resource-id="com.tencent.wework:id/b_o" and @text="确定"]
+  create:
+    # 新建菜单页，中间功能按钮
+    dailyButton: resourceId("com.tencent.wework:id/ee6").text("日报")
+    weeklyButton: resourceId("com.tencent.wework:id/ee6").text("周报")
+    monthlyButton: resourceId("com.tencent.wework:id/ee6").text("月报")
+    daily: &period
+      # 返回按钮
+      backButton: *backButton
+      # 今日工作输入框
+      jobInput: resourceId("com.tencent.wework:id/hpx").childSelector(className("android.widget.EditText").instance(0))
+      # 明日计划输入框
+      planInput: resourceId("com.tencent.wework:id/hpx").childSelector(className("android.widget.EditText").instance(1))
+      # 提交日报按钮
+      submitButton: resourceId("com.tencent.wework:id/hpx").childSelector(description("提交"))
+      # 没有选择接收人时，弹框显示的确定按钮
+      confirmButton: &confirmButton //*[@resource-id="com.tencent.wework:id/b_o" and @text="确定"]
+    weekly:
+      <<: *period
+    monthly:
+      <<: *period
+
+  record:
+    # 记录菜单页，上方的“我收到的”和“我提交的”tab页
+    receiveTab: //*[@resource-id="com.tencent.wework:id/glk" and @text="我收到的"]
+    submitTab: //*[@resource-id="com.tencent.wework:id/glk" and @text="我提交的"]
+    # 我提交的
+    submit:
+      # 模板选择按钮
+      templateSelect: //*[@resource-id="com.tencent.wework:id/dnt"]
+      # 模板选择器
+      templateSelector: //*[@resource-id="com.tencent.wework:id/dnn"]
+      templateConfirmButton: //*[@resource-id="com.tencent.wework:id/dnp" and @text="确定"]
+      # 模板选择器中的选项
+      templateOptions:
+        - 所有模板
+        - 日报
+        - 周报
+        - 月报
+        - 销售业绩
+        - 营业报告
+        - 拜访记录
+        - 销售单
+        - 邀约到访
+        - 店面检查表
+        - 汇报
+      # 日期选择按钮
+      dateSelect: //*[@resource-id="com.tencent.wework:id/dnz"]
+      # 记录列表
+      recordList: &recordList //*[@resource-id="com.tencent.wework:id/dse"]
+      # 记录中的内容
+      recordContent: &recordContent //*[@resource-id="com.tencent.wework:id/b1p"]/*[@class="android.widget.TextView"]
+    # 我收到的
+    receive:
+      recordList: *recordList
+      recordContent: *recordContent
+    # 记录的详情
+    detail:
+      # 左上角返回按钮
+      backButton: *backButton
+      # 右上角更多按钮
+      moreButton: //*[@resource-id="com.tencent.wework:id/gym"]
+      # 点击更多按钮后，弹框显示的修改、转发、删除按钮
+      modifyButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="修改"]
+      forwardButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="转发"]
+      deleteButton: //*[@resource-id="com.tencent.wework:id/dsp" and @text="删除"]
+      # 点击删除按钮后，弹框显示的确定按钮
+      confirmButton: *confirmButton

@@ -1,7 +1,7 @@
-package com.vankillua.wework.page;
+package com.vankillua.wework.page.message;
 
 import com.vankillua.common.BasePage;
-import com.vankillua.wework.bean.TodoPageLocation;
+import com.vankillua.wework.bean.message.TodoPageLocation;
 import io.appium.java_client.MobileElement;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.slf4j.Logger;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +42,7 @@ public class TodoPage extends BasePage {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected TodoPage waitForPage() {
+    public TodoPage waitForPage() {
         int times = WAIT_TIMES;
         do {
             if (isExists(todoPageLocation.getBackButton())) {
@@ -56,7 +57,7 @@ public class TodoPage extends BasePage {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected TodoPage setPrePage(BasePage currentPage) {
+    public TodoPage setPrePage(BasePage currentPage) {
         prePage = currentPage;
         return this;
     }
@@ -85,12 +86,8 @@ public class TodoPage extends BasePage {
                 int times = WAIT_TIMES;
                 // 等待待办任务消失
                 do {
-                    try {
-                        // 待办任务[element]不存在后再去找完成按钮会抛出StaleElementReferenceException异常
-                        if (!isExists(element, todoPageLocation.getCompleteButton(), 3)) {
-                            break;
-                        }
-                    } catch (StaleElementReferenceException ignored) {
+                    // 待办任务[element]不存在后再去找完成按钮会抛出StaleElementReferenceException异常
+                    if (isNotExists(element, todoPageLocation.getCompleteButton(), 3)) {
                         break;
                     }
                 } while (0 < --times);
@@ -108,12 +105,8 @@ public class TodoPage extends BasePage {
             int times = WAIT_TIMES;
             // 等待待办任务消失
             do {
-                try {
-                    // 待办任务[element]不存在后再去找完成按钮会抛出StaleElementReferenceException异常
-                    if (!isExists(element, todoPageLocation.getCompleteButton(), 3)) {
-                        break;
-                    }
-                } catch (StaleElementReferenceException ignored) {
+                // 待办任务[element]不存在后再去找完成按钮会抛出StaleElementReferenceException异常
+                if (!isNotExists(element, todoPageLocation.getCompleteButton(), 3)) {
                     break;
                 }
             } while (0 < --times);
@@ -130,7 +123,9 @@ public class TodoPage extends BasePage {
     List<String> getTodoTextList() {
         return getTodoList()
                 .stream()
-                .map(e -> find(e, todoPageLocation.getTodoText()).getText())
+                .map(e -> find(e, todoPageLocation.getTodoText(), 2))
+                .filter(Objects::nonNull)
+                .map(MobileElement::getText)
                 .collect(Collectors.toList());
     }
 
