@@ -8,4 +8,4 @@
     - wework: 企业微信练习（新建、删除组织架构和标签）
 - AppiumTest
     - snowball: 雪球App练习（删除全部自选股票，添加3只股票）
-    - wework: 企业微信App练习（）
+    - wework: 企业微信App练习（新建、完成待办，新建、删除日报、周报、月报）
