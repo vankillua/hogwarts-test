@@ -2,17 +2,18 @@ package com.vankillua.common;
 
 import com.vankillua.bean.AppiumYaml;
 import com.vankillua.utils.AppiumExpectedConditions;
+import com.vankillua.utils.WebExpectedConditions;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.AppiumFluentWait;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import java.nio.file.NoSuchFileException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -57,10 +57,14 @@ public abstract class BasePage {
     private static final String IOS_PLATFORM = "iOS";
     private static final long DEFAULT_TIMEOUT = 10L;
     private static final long DEFAULT_SLEEP_TIME = 1000L;
+    private static final String NATIVE_APP = "NATIVE_APP";
+    private static final String WEBVIEW = "WEBVIEW";
+    private static final String APP_PACKAGE = "appPackage";
 
     protected static final int WAIT_TIMES = 3;
     protected static final String UI_SELECTOR = "new UiSelector().";
     protected static final String UI_SCROLLABLE = "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(%s)";
+    protected static final String TOAST_XPATH = "//*[@class=\"android.widget.Toast\"]";
 
     @Autowired
     public void setAppiumYaml(AppiumYaml appiumYaml) {
@@ -74,10 +78,10 @@ public abstract class BasePage {
         } catch (MalformedURLException e) {
             logger.error("加载Appium配置文件时遇到异常：", e);
         }
-        driver = SingletonDriver.getInstance(driverType, url, capabilities);
-        if (0 < implicitlyWait) {
-            driver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
-        }
+        driver = SingletonDriver.getInstance(driverType, url, capabilities, implicitlyWait);
+//        if (0 < implicitlyWait) {
+//            driver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
+//        }
         if (0 < timeout && 0 < sleepTime) {
             wait = new AppiumFluentWait<>(driver);
             wait.withTimeout(Duration.ofSeconds(timeout)).pollingEvery(Duration.ofMillis(sleepTime));
@@ -352,6 +356,44 @@ public abstract class BasePage {
     public MobileElement scrollToUi(String ui) {
         String uiScrollable = String.format(UI_SCROLLABLE, getUIAutomator(ui));
         return ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(uiScrollable);
+    }
+
+    public boolean switchToWebView(String contextName) {
+        contextName = Optional.ofNullable(contextName).isPresent() ? contextName : "";
+        contextName = contextName.isEmpty() ? String.format("%s_%s", WEBVIEW, capabilities.getCapability(APP_PACKAGE)) : contextName;
+        try {
+            wait.until(AppiumExpectedConditions.webviewToBe(contextName));
+            driver.context(contextName);
+            return true;
+        } catch (TimeoutException ignored) {
+            logger.warn("The context '{}' is not exists!", contextName);
+            return false;
+        }
+    }
+
+    public void switchToNativeApp() {
+        driver.context(NATIVE_APP);
+    }
+
+    public boolean switchToWindow(String title) {
+        try {
+            WebDriverWait webDriverWait = new WebDriverWait(driver, sleepTime, implicitlyWait);
+            webDriverWait.until(WebExpectedConditions.windowToBeAvailableAndSwitchToIt(title));
+            webDriverWait.until(ExpectedConditions.titleIs(title));
+            return true;
+        } catch (TimeoutException ignored) {
+            logger.warn("No window found with name or handle or title: {}", title);
+            return false;
+        }
+    }
+
+    public void switchToDefaultContent() {
+        driver.switchTo().defaultContent();
+    }
+
+    public String getToast() {
+        MobileElement element = find(TOAST_XPATH);
+        return null != element ? element.getText() : "";
     }
 
     public void quit() {

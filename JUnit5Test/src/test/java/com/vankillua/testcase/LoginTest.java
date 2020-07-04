@@ -1,13 +1,19 @@
 package com.vankillua.testcase;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class LoginTest {
     static HashMap<String, String> data = new HashMap<String, String>();
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("LoginTest before all: " + sdf.format(new Date()));
+    }
 
     @Test
     void login() {
@@ -41,5 +47,10 @@ public class LoginTest {
             }
             Assertions.assertEquals("success", data.get("login"));
         }
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("LoginTest after all: " + sdf.format(new Date()));
     }
 }

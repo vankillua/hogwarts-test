@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author KILLUA
@@ -23,6 +24,10 @@ public class SingletonDriver {
     private SingletonDriver() {}
 
     public static AppiumDriver<MobileElement> getInstance(String driverType, URL remoteAddress, Capabilities desiredCapabilities) {
+        return getInstance(driverType, remoteAddress, desiredCapabilities, 0);
+    }
+
+    public static AppiumDriver<MobileElement> getInstance(String driverType, URL remoteAddress, Capabilities desiredCapabilities, long implicitlyWait) {
         if (null == singletonDriver) {
             synchronized (SingletonDriver.class) {
                 if (null == singletonDriver) {
@@ -30,6 +35,9 @@ public class SingletonDriver {
                         Class[] parameters = {URL.class, Capabilities.class};
                         Constructor<AppiumDriver<MobileElement>> constructor = (Constructor<AppiumDriver<MobileElement>>) Class.forName(driverType).getConstructor(parameters);
                         singletonDriver = constructor.newInstance(remoteAddress, desiredCapabilities);
+                        if (0 < implicitlyWait) {
+                            singletonDriver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
+                        }
                     } catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                         logger.error("获取AppiumDriver时遇到异常：", e);
                     }

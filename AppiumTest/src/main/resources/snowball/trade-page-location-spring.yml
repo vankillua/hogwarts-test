@@ -1,0 +1,26 @@
+# 交易页面
+trade:
+  hushenButton: //*[@resource-id="com.xueqiu.android:id/title_text" and @text="沪深"]
+  gangmeiButton: //*[@resource-id="com.xueqiu.android:id/title_text" and @text="港美"]
+  jijinButton: //*[@resource-id="com.xueqiu.android:id/title_text" and @text="基金"]
+  moniButton: //*[@resource-id="com.xueqiu.android:id/title_text" and @text="模拟"]
+
+  # 原生定位
+  openAStockNative: //*[@text="A股开户" or @content-desc="A股开户"]
+  openFundNative: //*[@text="基金开户" or @content-desc="基金开户"]
+
+  # WebView定位
+  windowTitle: "实盘交易"
+  openAStockWeb: //*[contains(@class, "trade_home_agu_")]
+  openFundWeb: //*[contains(@class, "trade_home_danjuan_")]
+
+  astock:
+    backButton: //*[@class="android.widget.ImageButton" and @content-desc="转到上一层级"]
+    phoneInputNative: //*[@resource-id="phone-number"]
+    codeInputNative: //*[@resource-id="code"]
+    openButtonNative: //*[@content-desc="立即开户"]
+
+    windowTitle: "平安证券 极速开户"
+    phoneInputWeb: //*[@id="phone-number"]
+    codeInputWeb: //*[@id="code"]
+    openButtonWeb: //*[contains(@class, "btn-submit")]/*[text()="立即开户"]

@@ -294,4 +294,34 @@ public class AppiumExpectedConditions {
             }
         };
     }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, Boolean> presenceOfWebView() {
+        return new AppiumFunction<AppiumDriver<MobileElement>, Boolean>() {
+            @NullableDecl
+            @Override
+            public Boolean apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                return Objects.requireNonNull(input).getContextHandles().stream().anyMatch(h -> h.toUpperCase().startsWith("WEBVIEW_"));
+            }
+
+            @Override
+            public String toString() {
+                return "presence of any webview in contexts";
+            }
+        };
+    }
+
+    public static AppiumFunction<AppiumDriver<MobileElement>, Boolean> webviewToBe(String contextName) {
+        return new AppiumFunction<AppiumDriver<MobileElement>, Boolean>() {
+            @NullableDecl
+            @Override
+            public Boolean apply(@NullableDecl AppiumDriver<MobileElement> input) {
+                return Objects.requireNonNull(input).getContextHandles().stream().anyMatch(h -> h.equalsIgnoreCase(contextName));
+            }
+
+            @Override
+            public String toString() {
+                return "presence of the webview: " + contextName;
+            }
+        };
+    }
 }

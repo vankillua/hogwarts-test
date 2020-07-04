@@ -31,6 +31,7 @@ public class MainPage extends BasePage {
 
     private SearchPage searchPage;
     private QuotationPage quotationPage;
+    private TradePage tradePage;
 
     @Autowired
     public void setSearchPage(SearchPage searchPage) {
@@ -40,6 +41,11 @@ public class MainPage extends BasePage {
     @Autowired
     public void setQuotationPage(QuotationPage quotationPage) {
         this.quotationPage = quotationPage;
+    }
+
+    @Autowired
+    public void setTradePage(TradePage tradePage) {
+        this.tradePage = tradePage;
     }
 
     @Override
@@ -64,5 +70,10 @@ public class MainPage extends BasePage {
     public QuotationPage toQuotationPage() {
         click(QUOTATION_TAB);
         return quotationPage.waitForPage().setPrePage(this);
+    }
+
+    public TradePage toTradePage() {
+        click(TRADE_TAB);
+        return tradePage.waitForPage().setPrePage(this);
     }
 }

@@ -2,11 +2,16 @@ package com.vankillua.testcase;
 
 import org.junit.jupiter.api.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @DisplayName("JUnit5演示类")
 public class JUnit5Demo1Test {
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @BeforeAll
     static void beforeAll() {
-        System.out.println("beforeAll");
+        System.out.println("beforeAll: " + sdf.format(new Date()));
     }
 
     @BeforeEach
@@ -14,8 +19,8 @@ public class JUnit5Demo1Test {
         System.out.println("beforeEach");
     }
 
-//    @Test
-    @RepeatedTest(2)
+    @Test
+//    @RepeatedTest(2)
     @DisplayName("func1 测试方法")
     void func1() {
         System.out.println("func1");
@@ -35,6 +40,6 @@ public class JUnit5Demo1Test {
 
     @AfterAll
     static void afterAll() {
-        System.out.println("afterAll");
+        System.out.println("afterAll: " + sdf.format(new Date()));
     }
 }
