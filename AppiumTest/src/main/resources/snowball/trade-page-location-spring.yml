@@ -16,6 +16,7 @@ trade:
 
   astock:
     backButton: //*[@class="android.widget.ImageButton" and @content-desc="转到上一层级"]
+    # 注：调试发现通过原生控件定位无法sendKeys到输入框中
     phoneInputNative: //*[@resource-id="phone-number"]
     codeInputNative: //*[@resource-id="code"]
     openButtonNative: //*[@content-desc="立即开户"]

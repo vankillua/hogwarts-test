@@ -84,8 +84,13 @@ public class TradePage extends BasePage {
         return isWebView;
     }
 
-    public TradePage openAStockAccount() {
+    public boolean openAStockAccount() {
         boolean isWebView = switchToWebViewAndWindow(null, tradePageLocation.getWindowTitle());
+        // 调试发现通过原生控件定位无法sendKeys到输入框中，因此切换到WebView失败直接返回
+        if (!isWebView) {
+            logger.error("切换WebView失败，则无法进行后续操作，直接返回操作失败");
+            return false;
+        }
         click(isWebView ? tradePageLocation.getOpenAStockWeb() : tradePageLocation.getOpenAStockNative());
         TradePageLocation.OpenStockPageLocation stockLocation = tradePageLocation.getAstock();
         try {
@@ -96,12 +101,14 @@ public class TradePage extends BasePage {
             String phone = RandomStringUtils.randomNumeric(11);
             String code = RandomStringUtils.randomNumeric(6);
             logger.info("随机生成的手机号及验证码：{}, {}", phone, code);
-            sendKeys(isWebView ? stockLocation.getPhoneInputWeb() : stockLocation.getOpenButtonNative(), true, phone);
+            sendKeys(isWebView ? stockLocation.getPhoneInputWeb() : stockLocation.getPhoneInputNative(), true, phone);
             sendKeys(isWebView ? stockLocation.getCodeInputWeb() : stockLocation.getCodeInputNative(), true, code);
             click(isWebView ? stockLocation.getOpenButtonWeb() : stockLocation.getOpenButtonNative());
-            logger.info("点击【立即开户】按钮后，提示语为：{}", getToast());
+//            logger.info("点击【立即开户】按钮后，提示语为：{}", getToast());
+            return true;
         } catch (Exception e) {
             logger.error("A股开户操作时遇到异常：", e);
+            return false;
         } finally {
             try {
                 if (isWebView) {
@@ -113,6 +120,5 @@ public class TradePage extends BasePage {
             } catch (Exception ignored) {
             }
         }
-        return this;
     }
 }
