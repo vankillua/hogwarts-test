@@ -6,3 +6,4 @@
 *.iws
 */allure-results
 **/cookies.json
+*.log
